@@ -10,9 +10,13 @@ const calculateStaticFuelRequirement = function(mass){
 const calculateDynamicFuelRequirement = function(mass){
     let fuelRequirementAccumulator = 0
     let fuelRequirementRemnant = mass
-    while (fuelRequirementRemnant > 0){
+    while (true){
         fuelRequirementRemnant = Math.floor(fuelRequirementRemnant/3) - 2
-        fuelRequirementAccumulator = fuelRequirementRemnant > 0 ? fuelRequirementAccumulator + fuelRequirementRemnant:fuelRequirementAccumulator + 0
+        if (fuelRequirementRemnant > 0){
+            fuelRequirementAccumulator =  fuelRequirementAccumulator + fuelRequirementRemnant
+        }else{
+            break
+        }
     }
     return fuelRequirementAccumulator
 }
