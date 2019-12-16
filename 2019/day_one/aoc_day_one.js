@@ -1,18 +1,17 @@
+const fs = require('fs')
 
-// const calculateFuelRequirementFromMass = function(mass){
-//     return Math.floor(mass/3) - 2
-// }
+const filePath = String(__dirname + '/input.txt')
+const input = fs.readFileSync(filePath).toString().split('\n').map(value => parseInt(value))
 
-// const calculateTotalFuelRequirement = function(masses, callback){
-//     masses.reduce(function(accumulator, currentValue, currentIndex) {
-//         return accumulator + callback(currentValue)
-//       }, 0)
-// }
+const calculateFuelRequirementFromMass = function(mass){
+    return Math.floor(mass/3) - 2
+}
 
-const fetch = require('node-fetch')
-fetch('https://adventofcode.com/2019/day/1/input')
-    .then(res => console.log(res))
-    // .then(json => console.log(json))
+const calculateTotalFuelRequirement = function(masses, callback){
+    return masses.reduce(function(accumulator, currentValue) {
+        return accumulator + callback(currentValue)
+      }, 0)
+}
 
-
+console.log(calculateTotalFuelRequirement(input, calculateFuelRequirementFromMass))
 
