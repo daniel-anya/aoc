@@ -1,4 +1,4 @@
-# aoc
+# AoC
 Advent of Code challenges - ```https://adventofcode.com/```
 
 
