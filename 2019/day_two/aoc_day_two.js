@@ -1,32 +1,53 @@
-const fs = require('fs')
+const fs = require("fs");
 
-const filePath = String(__dirname + '/input.txt')
-const input = fs.readFileSync(filePath).toString().split(',').map(value => parseInt(value))
+const filePath = String(__dirname + "/input.txt");
+const input = fs
+  .readFileSync(filePath)
+  .toString()
+  .split(",")
+  .map(value => parseInt(value));
 
 const programAlarmLogic = (function(inputArray) {
+  function findOutput(noun, verb) {
+    const clone = [...inputArray];
+    clone[1] = noun;
+    clone[2] = verb;
 
-inputArray[1] = 12
-inputArray[2] = 2
+    i = 0;
 
-i = 0
+    while (true) {
+      if (clone[i] === 99) {
+        break;
+      } else if (clone[i] === 1) {
+        clone[clone[i + 3]] = clone[clone[i + 1]] + clone[clone[i + 2]];
+      } else if (clone[i] === 2) {
+        clone[input[i + 3]] = clone[input[i + 1]] * clone[clone[i + 2]];
+      }
+      i = i + 4;
+    }
+    return clone[0];
+  }
 
-while (true){
-if (inputArray[i] === 99){
-    break
-}
-else if (inputArray[i] === 1) {
-inputArray[inputArray[i+3]] = inputArray[inputArray[i + 1]] + inputArray[inputArray[i + 2]]
+  function findInputs(finalAnswer) {
+    for (let noun of [...Array(100).keys()]) {
+      for (let verb of [...Array(100).keys()]) {
+        if (findOutput(noun, verb) === finalAnswer) {
+          return 100 * noun + verb;
+        }
+      }
+    }
 
-}
-else if (inputArray[i] === 2) {
-    inputArray[input[i+3]] = inputArray[input[i + 1]] * inputArray[inputArray[i + 2]]
-    
-}
-i = i + 4
-}
-return inputArray[0]
-    
-})(input)
+    return "No results found";
+  }
 
-//Part One
-console.log("The new initial value is %d", programAlarmLogic)
+  return {
+    partOneAnswer: findOutput(12, 2),
+    partTwoAnswer: findInputs(19690720)
+  };
+})(input);
+
+//Part One Answer
+console.log("The output is %d", programAlarmLogic.partOneAnswer);
+
+//Part Two Answer
+console.log("The input is", programAlarmLogic.partTwoAnswer);
