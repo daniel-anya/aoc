@@ -66,7 +66,7 @@ const crossedWires = (function(dataInput) {
 
   function _minimumIntersectionPoint(intersections) {
     const summedIntersections = intersections.map(pos => {
-      let split = pos.split(",");
+      const split = pos.split(",");
       const splitArray = split.map(val => parseInt(val));
       return splitArray.reduce((acc, initVal) => {
         return Math.abs(acc) + Math.abs(initVal);
@@ -76,7 +76,6 @@ const crossedWires = (function(dataInput) {
     return Math.min(...summedIntersections);
   }
   function _minimumIntersectionSteps(intersections, wireOne, wireTwo) {
-    // const intersections = _findIntersections(wireOne, wireTwo);
     const steps = intersections.map(intersection => {
       return (
         wireOne.position.get(intersection) + wireTwo.position.get(intersection)
