@@ -8,29 +8,29 @@ import (
 	"strings"
 )
 
-type stack struct {
-	slice []string
+type Stack struct {
+	Elements []string
 }
 
-func (s *stack) insert(item string) {
-	s.slice = append(s.slice, item)
+func (s *Stack) Insert(item string) {
+	s.Elements = append(s.Elements, item)
 }
 
-func (s *stack) pop() string {
-	size := len(s.slice)
-	item := s.slice[size-1]
-	s.slice = s.slice[0:(size - 1)]
+func (s *Stack) Pop() string {
+	size := len(s.Elements)
+	item := s.Elements[size-1]
+	s.Elements = s.Elements[0:(size - 1)]
 	return item
 }
 
-func (s *stack) peek() string {
-	size := len(s.slice)
-	item := s.slice[size-1]
+func (s Stack) Peek() string {
+	size := len(s.Elements)
+	item := s.Elements[size-1]
 	return item
 }
 
-func (s *stack) size() int {
-	return len(s.slice)
+func (s Stack) Size() int {
+	return len(s.Elements)
 }
 
 func getStartChunkMap() map[string]bool {
@@ -44,7 +44,7 @@ func getValidPairsMap() map[string]bool {
 	return map[string]bool{"()": true, "[]": true, "{}": true, "<>": true}
 }
 
-func inputToLines(fileName string) []string {
+func txtFileToNewLineSepStrings(fileName string) []string {
 	content, err := ioutil.ReadFile(fileName)
 
 	if err != nil {
@@ -65,16 +65,16 @@ func computeCorruptTally(chunkLines []string) int {
 
 OUTER:
 	for _, line := range chunkLines {
-		curStack := stack{}
+		curStack := Stack{}
 		charSlice := strings.Split(line, "")
 		for _, char := range charSlice {
 			if _, ok := startChunk[char]; ok {
-				curStack.insert(char)
+				curStack.Insert(char)
 			}
 			if _, ok := endChunk[char]; ok {
-				lastChar := curStack.peek()
+				lastChar := curStack.Peek()
 				if _, ok := validPairs[lastChar+char]; ok {
-					curStack.pop()
+					curStack.Pop()
 					continue
 				}
 				tally += pointsMap[char]
@@ -91,27 +91,27 @@ func isIncomplete(line []string) (bool, []string) {
 	endChunk := getEndChunkMap()
 	validPairs := getValidPairsMap()
 
-	curStack := stack{}
+	curStack := Stack{}
 	for _, char := range line {
 		if _, ok := startChunk[char]; ok {
-			curStack.insert(char)
+			curStack.Insert(char)
 		}
 
 		if _, ok := endChunk[char]; ok {
-			lastChar := curStack.peek()
+			lastChar := curStack.Peek()
 			if _, ok := validPairs[lastChar+char]; ok {
-				curStack.pop()
+				curStack.Pop()
 				continue
 			}
-			curStack = stack{}
+			curStack = Stack{}
 			break
 		}
 	}
 
-	if curStack.size() == 0 {
+	if curStack.Size() == 0 {
 		return false, []string{}
 	}
-	return true, curStack.slice
+	return true, curStack.Elements
 }
 
 func computeReplacementScore(chunkLines []string) int {
@@ -143,7 +143,7 @@ func computeReplacementScore(chunkLines []string) int {
 
 func main() {
 
-	chunkLines := inputToLines("input.txt")
+	chunkLines := txtFileToNewLineSepStrings("input.txt")
 	corruptTally := computeCorruptTally(chunkLines)
 	middleReplacementScore := computeReplacementScore(chunkLines)
 
