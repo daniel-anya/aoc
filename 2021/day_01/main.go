@@ -20,7 +20,7 @@ func txtFileToIntSlice(fileName string) []int {
 
 	var intSlice []int
 
-	for _, strElem := range contentSlice{
+	for _, strElem := range contentSlice {
 		intElem, _ := strconv.Atoi(strElem)
 		intSlice = append(intSlice, intElem)
 	}
@@ -28,7 +28,7 @@ func txtFileToIntSlice(fileName string) []int {
 	return intSlice
 }
 
-func computeDepthIncreases(input []int) int{
+func computeDepthIncreases(input []int) int {
 	inputSize := len(input)
 	curr, next := 0, 1
 
@@ -44,9 +44,9 @@ func computeDepthIncreases(input []int) int{
 	return numIncreases
 }
 
-func computeSlidingWindowSums(input []int) []int{
+func computeSlidingWindowSums(input []int) []int {
 	inputSize := len(input)
-	 one, two, three := 0, 1, 2
+	one, two, three := 0, 1, 2
 
 	var sums []int
 
