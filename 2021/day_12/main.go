@@ -63,7 +63,7 @@ func txtFileToNewLineSepStrings(fileName string) []string {
 	return contentSlice
 }
 
-func parseLinesToNodes(edges []string) map[string]*Node {
+func parseLinesToBidirectionalGraph(edges []string) map[string]*Node {
 	nodeMap := make(map[string]*Node)
 	for _, edge := range edges {
 		nodes := strings.Split(edge, "-")
@@ -105,11 +105,11 @@ func getOptimalPaths(nodeMap map[string]*Node, predicate func(nodeId string, s *
 	return optimalPaths
 }
 
-func partOnePredicate(nodeId string, s *Seen) bool {
+func partOneConstraint(nodeId string, s *Seen) bool {
 	return isLower(nodeId) && s.Contains(nodeId)
 }
 
-func partTwoPredicate(nodeId string, s *Seen) bool {
+func partTwoConstraint(nodeId string, s *Seen) bool {
 	nodeTally, smallCaveVisitedTwice := s.TallyNodes()
 	if (nodeId == "start" && nodeTally["start"] == 1) || (nodeId == "end" && nodeTally["end"] == 1) {
 		return true
@@ -125,19 +125,19 @@ func partTwoPredicate(nodeId string, s *Seen) bool {
 	return false
 }
 
-func getPaths(node *Node, seen *Seen, predicate func(nodeId string, s *Seen) bool) []string {
+func getPaths(node *Node, seen *Seen, constraint func(nodeId string, s *Seen) bool) []string {
 	var nodePath []string
 	if node.nodeId == "end" {
 		return []string{node.nodeId}
 	}
 
-	if predicate(node.nodeId, seen) {
+	if constraint(node.nodeId, seen) {
 		return []string{""}
 	}
 
 	seen.Insert(node.nodeId)
 	for _, child := range node.children {
-		childPaths := getPaths(child, seen, predicate)
+		childPaths := getPaths(child, seen, constraint)
 		for _, path := range childPaths {
 			nodePath = append(nodePath, fmt.Sprintf("%s,%s", node.nodeId, path))
 		}
@@ -157,9 +157,9 @@ func isLower(s string) bool {
 
 func main() {
 	inputs := txtFileToNewLineSepStrings("input.txt")
-	nodeMap := parseLinesToNodes(inputs)
-	numOptimalPaths := len(getOptimalPaths(nodeMap, partOnePredicate))
-	numOptimalPathsPartTwo := len(getOptimalPaths(nodeMap, partTwoPredicate))
+	nodeMap := parseLinesToBidirectionalGraph(inputs)
+	numOptimalPaths := len(getOptimalPaths(nodeMap, partOneConstraint))
+	numOptimalPathsPartTwo := len(getOptimalPaths(nodeMap, partTwoConstraint))
 
 	// Part 1 Answer
 	fmt.Printf("Part 1 answer: %d \n", numOptimalPaths)
